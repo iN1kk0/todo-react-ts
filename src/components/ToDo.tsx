@@ -1,6 +1,15 @@
 import classnames from "classnames";
 
-const ToDo = (props: any) => {
+interface IProps {
+  todo: {
+    text: string;
+    isItDone: boolean;
+  };
+  index: number;
+  handleCheck: (index: number) => void;
+}
+
+const ToDo = (props: IProps) => {
   return (
     <div
       className={classnames("todo text-xl my-4", {

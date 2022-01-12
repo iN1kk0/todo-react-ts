@@ -1,7 +1,11 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const ToDoForm = (props: any) => {
+interface IProps {
+  handleSubmit: (value: { text: string }) => void;
+}
+
+const ToDoForm = (props: IProps) => {
   const formValidationSchema = Yup.object().shape({
     text: Yup.string()
       .min(3, "Text must be 3 characters at minimum")
@@ -31,7 +35,11 @@ const ToDoForm = (props: any) => {
             >
               Add
             </button>
-            <ErrorMessage name="text" component="div" />
+            <ErrorMessage
+              name="text"
+              component="div"
+              className="text-red-600"
+            />
           </Form>
         );
       }}
