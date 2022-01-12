@@ -1,22 +1,23 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const ToDoForm = (props: any) => {
+  const formValidationSchema = Yup.object().shape({
+    text: Yup.string()
+      .min(3, "Text must be 3 characters at minimum")
+      .required("Text is required"),
+  });
+
   return (
     <Formik
       initialValues={{ text: "" }}
-      validate={(values) => {
-        const errors: { text?: string } = {};
-        if (!values.text) {
-          errors.text = "Empty value";
-        }
-        return errors;
-      }}
+      validationSchema={formValidationSchema}
       onSubmit={(values) => {
         props.handleSubmit(values);
       }}
     >
       {(prop) => {
-        console.log(prop.values, prop.errors, prop.touched);
+        //console.log(prop.values, prop.errors, prop.touched);
         return (
           <Form>
             <Field type="text" name="text" />

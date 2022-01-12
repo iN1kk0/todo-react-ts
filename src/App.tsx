@@ -4,7 +4,6 @@ import ToDoForm from "./components/ToDoForm";
 import ToDo from "./components/ToDo";
 
 function App() {
-  //const [value, setValue] = useState("");
   const [todos, addTodos] = useState([
     {
       text: "Learn about React",
@@ -19,11 +18,6 @@ function App() {
       isItDone: true,
     },
   ]);
-
-  /*const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-    setValue(e.target.value);
-  };*/
 
   const handleCheck = (index: number) => {
     const newTodos = [...todos];
