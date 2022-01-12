@@ -1,10 +1,10 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import "./App.css";
-import Form from "./components/Form";
+import ToDoForm from "./components/ToDoForm";
 import ToDo from "./components/ToDo";
 
 function App() {
-  const [value, setValue] = useState("");
+  //const [value, setValue] = useState("");
   const [todos, addTodos] = useState([
     {
       text: "Learn about React",
@@ -20,9 +20,10 @@ function App() {
     },
   ]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  /*const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
     setValue(e.target.value);
-  };
+  };*/
 
   const handleCheck = (index: number) => {
     const newTodos = [...todos];
@@ -34,14 +35,9 @@ function App() {
     addTodos(newTodos);
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (value) {
-      const newTodo = [...todos, { text: value, isItDone: false }];
-      addTodos(newTodo);
-    } else {
-      alert("Empty value");
-    }
+  const handleSubmit = (value: { text: string }) => {
+    const newTodo = [...todos, { text: value.text, isItDone: false }];
+    addTodos(newTodo);
   };
 
   return (
@@ -56,7 +52,7 @@ function App() {
           />
         ))}
       </div>
-      <Form handleChange={handleChange} handleSubmit={handleSubmit} />
+      <ToDoForm handleSubmit={handleSubmit} />
     </div>
   );
 }
