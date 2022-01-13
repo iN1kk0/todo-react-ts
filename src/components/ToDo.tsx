@@ -2,11 +2,12 @@ import classnames from "classnames";
 
 interface IProps {
   todo: {
+    id: number;
     text: string;
     isItDone: boolean;
   };
   index: number;
-  handleCheck: (index: number) => void;
+  handleCheck: (todo: any) => void;
 }
 
 const ToDo = (props: IProps) => {
@@ -20,7 +21,9 @@ const ToDo = (props: IProps) => {
       <input
         type="checkbox"
         checked={props.todo.isItDone}
-        onChange={() => props.handleCheck(props.index)}
+        onChange={() =>
+          props.handleCheck({ ...props.todo, isItDone: !props.todo.isItDone })
+        }
         className="ml-2"
       />
     </div>
