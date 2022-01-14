@@ -66,13 +66,16 @@ function App() {
 
   return (
     <div className="App">
+      <header className="bg-slate-500 mb-8">
+        <h1 className="text-xl text-white py-4 font-semibold">TODO APP</h1>
+      </header>
       {queryData.isLoading ||
       postData.isLoading ||
       updateData.isLoading ||
       deleteData.isLoading ? (
-        "Loading..."
+        <div className="text-green-700 my-4">Loading...</div>
       ) : (
-        <>
+        <div className="todos-section">
           <div className="todos">
             {queryData?.data?.data.map((todo, index) => (
               <ToDo
@@ -85,7 +88,7 @@ function App() {
             ))}
           </div>
           <ToDoForm handleSubmit={handleSubmit} />
-        </>
+        </div>
       )}
     </div>
   );
