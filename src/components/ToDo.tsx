@@ -8,6 +8,7 @@ interface IProps {
   };
   index: number;
   handleCheck: (todo: any) => void;
+  handleDelete: (id: number) => void;
 }
 
 const ToDo = (props: IProps) => {
@@ -26,6 +27,12 @@ const ToDo = (props: IProps) => {
         }
         className="ml-2"
       />
+      <button
+        className="mx-2 text-xs text-red-500"
+        onClick={() => props.handleDelete(props.todo.id)}
+      >
+        Delete
+      </button>
     </div>
   );
 };

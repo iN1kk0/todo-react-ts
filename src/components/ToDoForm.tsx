@@ -27,7 +27,7 @@ const ToDoForm = (props: IProps) => {
             <Field
               type="text"
               name="text"
-              className="border-2 border-gray-200 rounded py-2 px-4"
+              className="border-2 border-gray-200 rounded py-2 px-4 my-4"
             />
             <button
               type="submit"

@@ -31,10 +31,10 @@ function App() {
         },
       })
       .then((response) => {
-        console.log(response);
+        //console.log(response);
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
       });
   };
 
@@ -48,26 +48,21 @@ function App() {
     });
   };
 
+  const deleteTask = async (id: number) => {
+    await axios.delete("http://localhost:5000/todos/delete/" + id);
+    await getTasks();
+  };
+
   useEffect(() => {
     getTasks();
   }, []);
 
   const handleCheck = async (todo: object) => {
-    console.log(todo);
-    /*const newTodos = [...todos];
-    if (newTodos[index].isItDone) {
-      newTodos[index].isItDone = false;
-    } else {
-      newTodos[index].isItDone = true;
-    }
-    addTodos(newTodos);*/
     await updateTask(todo);
     await getTasks();
   };
 
   const handleSubmit = async (value: { text: string }) => {
-    /*const newTodo = [...todos, { text: value.text, isItDone: false }];
-    addTodos(newTodo);*/
     await addTask(value.text);
     await getTasks();
   };
@@ -81,6 +76,7 @@ function App() {
             index={index}
             todo={todo}
             handleCheck={handleCheck}
+            handleDelete={deleteTask}
           />
         ))}
       </div>
