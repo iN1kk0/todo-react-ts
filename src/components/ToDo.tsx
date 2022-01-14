@@ -3,8 +3,8 @@ import classnames from "classnames";
 interface IProps {
   todo: {
     id: number;
-    text: string;
-    isItDone: boolean;
+    description: string;
+    done: boolean;
   };
   index: number;
   handleCheck: (todo: any) => void;
@@ -12,18 +12,20 @@ interface IProps {
 }
 
 const ToDo = (props: IProps) => {
+  console.log(props.todo.description);
   return (
     <div
       className={classnames("todo text-xl my-4", {
-        "line-through": !!props.todo.isItDone,
+        "line-through": !!props.todo.done,
       })}
     >
-      {props.todo.text}
+      {props?.todo?.description}
+
       <input
         type="checkbox"
-        checked={props.todo.isItDone}
+        checked={props.todo.done}
         onChange={() =>
-          props.handleCheck({ ...props.todo, isItDone: !props.todo.isItDone })
+          props.handleCheck({ ...props.todo, isItDone: !props.todo.done })
         }
         className="ml-2"
       />

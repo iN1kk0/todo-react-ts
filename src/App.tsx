@@ -1,86 +1,92 @@
-import { useEffect, useState } from "react";
 import "./App.css";
 import ToDoForm from "./components/ToDoForm";
 import ToDo from "./components/ToDo";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+export interface ITask {
+  id: number;
+  description: string;
+  done: boolean;
+}
 
 function App() {
-  const [todos, addTodos] = useState<
-    { id: number; text: any; isItDone: any }[]
-  >([]);
+  const queryData = useQuery("todos", async () => {
+    return await axios.get<ITask[]>("http://localhost:5000/todos");
+  });
+  const client = useQueryClient();
 
-  // https://github.com/podgorniy/todo-server
-
-  const getTasks = async () => {
-    const result = await axios.get("http://localhost:5000/todos");
-    console.log(result.data);
-    const newTodo = result.data.map((task: any) => {
-      return { id: task.id, text: task.description, isItDone: task.done };
-    });
-
-    addTodos(newTodo);
-  };
-
-  const addTask = async (text: string) => {
-    await axios
-      .post("http://localhost:5000/todos", {
+  const postData = useMutation<AxiosResponse<ITask>, any, Partial<ITask>>(
+    async (values) => {
+      console.log(values.description);
+      return await axios.post("http://localhost:5000/todos", {
         todo: {
           id: new Date().getTime(),
-          description: text,
+          description: values.description,
           done: false,
         },
-      })
-      .then((response) => {
-        //console.log(response);
-      })
-      .catch((error) => {
-        //console.log(error);
       });
-  };
+    }
+  );
 
-  const updateTask = async (todo: any) => {
+  console.log(
+    "isLoading:",
+    queryData.isLoading,
+    "Mutation:",
+    postData.isLoading
+  );
+
+  const updateData = useMutation(async (todo: any) => {
     await axios.put("http://localhost:5000/todos/" + todo.id, {
       todo: {
         id: todo.id,
         done: todo.isItDone,
-        description: todo.text,
+        description: todo.description,
       },
     });
-  };
+  });
 
-  const deleteTask = async (id: number) => {
+  const deleteData = useMutation(async (id: number) => {
     await axios.delete("http://localhost:5000/todos/delete/" + id);
-    await getTasks();
-  };
+  });
 
-  useEffect(() => {
-    getTasks();
-  }, []);
+  const handleDelete = async (id: number) => {
+    await deleteData.mutateAsync(id);
+    client.invalidateQueries(["todos"]);
+  };
 
   const handleCheck = async (todo: object) => {
-    await updateTask(todo);
-    await getTasks();
+    await updateData.mutateAsync(todo);
+    client.invalidateQueries(["todos"]);
   };
 
-  const handleSubmit = async (value: { text: string }) => {
-    await addTask(value.text);
-    await getTasks();
+  const handleSubmit = async (value: Partial<ITask>) => {
+    await postData.mutateAsync(value);
+    client.invalidateQueries(["todos"]);
   };
 
   return (
     <div className="App">
-      <div className="todos">
-        {todos.map((todo, index) => (
-          <ToDo
-            key={index}
-            index={index}
-            todo={todo}
-            handleCheck={handleCheck}
-            handleDelete={deleteTask}
-          />
-        ))}
-      </div>
-      <ToDoForm handleSubmit={handleSubmit} />
+      {queryData.isLoading ||
+      postData.isLoading ||
+      updateData.isLoading ||
+      deleteData.isLoading ? (
+        "Loading..."
+      ) : (
+        <>
+          <div className="todos">
+            {queryData?.data?.data.map((todo, index) => (
+              <ToDo
+                key={index}
+                index={index}
+                todo={todo}
+                handleCheck={handleCheck}
+                handleDelete={handleDelete}
+              />
+            ))}
+          </div>
+          <ToDoForm handleSubmit={handleSubmit} />
+        </>
+      )}
     </div>
   );
 }
